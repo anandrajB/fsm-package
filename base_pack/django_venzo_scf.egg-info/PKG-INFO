@@ -1,0 +1,13 @@
+Metadata-Version: 2.1
+Name: django-venzo-scf
+Version: 1.0.1
+Author: anand
+Author-email: anandrajb@venzotechnologies.com
+License: UNKNOWN
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Education
+Classifier: Operating System :: Microsoft :: Windows :: Windows 10
+Classifier: Programming Language :: Python :: 3
+Description-Content-Type: text/markdown
+
+fsm for banks
