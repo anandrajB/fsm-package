@@ -2,6 +2,10 @@ from .models import TransitionManager
 import functools
 
 
+
+
+
+
 # simple exception
 class TransitionNotAllowed(Exception):
     pass
@@ -19,6 +23,7 @@ def scftransition(type):
         return inner_function
 
     return wrapper_base
+
 
 
 

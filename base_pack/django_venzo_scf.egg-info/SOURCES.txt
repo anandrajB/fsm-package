@@ -12,4 +12,5 @@ venzoscf/apps.py
 venzoscf/models.py
 venzoscf/tests.py
 venzoscf/views.py
+venzoscf/migrations/0001_initial.py
 venzoscf/migrations/__init__.py
