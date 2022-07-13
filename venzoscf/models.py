@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 # from django.contrib.postgres.fields import ArrayField
 
+from myapp.middleware import get_current_user
 
 
 
@@ -13,6 +14,11 @@ class TransitionManager(models.Model):
     initial_state = models.CharField(max_length = 255)
     final_state = models.CharField(max_length = 255)
     sign_required = models.IntegerField()
+    sub_sign = models.IntegerField(default = 0 , editable= False)
+
+    def save(self, *args, **kwargs):
+        self.type = self.type.upper()
+        return super(TransitionManager,self).save(*args, **kwargs)
     
     def __str__(self):
         return self.type
@@ -26,7 +32,7 @@ class TransitionManager(models.Model):
 class Workflowitems(models.Model):
     
     created_date = models.DateTimeField(auto_now_add=True)
-    type = models.OneToOneField(TransitionManager, on_delete=models.CASCADE,blank=True, null=True)
+    type = models.ForeignKey(TransitionManager, on_delete=models.CASCADE,blank=True, null=True)
     initial_state = models.CharField(max_length=50)
     interim_state = models.CharField(max_length=50)
     final_state = models.CharField(max_length=50)
@@ -52,7 +58,7 @@ class workevents(models.Model):
     subaction = models.CharField(max_length=55 , blank=True, null=True)
     to_state = models.CharField(max_length=50, default='DRAFT')
     interim_state = models.CharField(max_length=50, default='DRAFT')
-    event_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    event_user = models.ForeignKey(settings.AUTH_USER_MODEL,  on_delete=models.CASCADE )
     end_value = models.CharField(max_length=55,blank=True, null=True)
     is_read = models.BooleanField(default=True,blank=True, null=True)
     final_value = models.CharField(max_length=55,blank=True, null=True)

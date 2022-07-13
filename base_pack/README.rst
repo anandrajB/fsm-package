@@ -1,7 +1,6 @@
-
-========================
+================
 quick start
-=======================
+================
 
 INSTALLED_APPS = [
     ...
@@ -9,12 +8,24 @@ INSTALLED_APPS = [
 ]
 
 
+===============
+admin.py
+===============
+# add this to your admin.py 
+
+from django.contrib import admin
+from venzoscf.admin import TransitionManagerAdmin
+from venzoscf.models import TransitionManager , workflowitems , workevents
+
+admin.site.register(TransitionManager,TransitionManagerAdmin)
+
+
+===========
 setup
 ===========
 
-
 1. add your package in INSTALLED_APPS
 
-2. migrations 
+2. apply migrations  
 
-3. your good to go
+3. enjoy your transitions

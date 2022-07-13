@@ -9,6 +9,7 @@ django_venzo_scf.egg-info/top_level.txt
 venzoscf/__init__.py
 venzoscf/admin.py
 venzoscf/apps.py
+venzoscf/exceptions.py
 venzoscf/models.py
 venzoscf/tests.py
 venzoscf/views.py

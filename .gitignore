@@ -1,2 +1,4 @@
-base_pack/build
-base_pack/dist
+env
+*env
+evn
+*evn

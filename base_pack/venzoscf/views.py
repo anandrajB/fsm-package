@@ -1,28 +1,17 @@
 from .models import TransitionManager
 import functools
+from .exceptions import TransitionNotAllowed , TypeDoesNotExist , TypeEmpty
 
 
 
 
+def scftransition(type,sign,*args,**kwargs):
+    gets_model = TransitionManager.objects.get(type = type)
+    if gets_model.exists():
+        for len_arr in range(1,):
+            return None
+    return scftransition
 
-
-# simple exception
-class TransitionNotAllowed(Exception):
-    pass
-
-
-
-
-def scftransition(type):
-
-    def wrapper_base(func):
-        @functools.wraps(func)
-        def inner_function(self):
-            if type == "PROGRAM":
-                TransitionManager.objects.get(type = "PROGRAM")
-        return inner_function
-
-    return wrapper_base
 
 
 
