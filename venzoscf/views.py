@@ -10,11 +10,9 @@ from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
+from venzoscf.exception import ModelNotfound , SignLengthError
 
 
-# simple exception
-class TransitionNotAllowed(Exception):
-    pass
 
 
 
@@ -48,87 +46,62 @@ sign_list = [
 ]
 
 
-class ActionNotFound(Exception):
-    pass
 
-
-class TypeDoesNotExist(Exception):
-    pass
-
-class TypeEmpty(Exception):
-    pass
-
-class ModelNotfound(APIException):
-    pass
-
-class MoreThanOneModel(Exception):
-    pass
-
-class IDError(Exception):
-    pass
-
-
-
-
-
-def myuser(request):
-    return request.user
-
-def scftransition(type ,action , stage , id):
-    gets_model = TransitionManager.objects.get(type = type.upper())
-    if stage > gets_model.sign_required :
-        
-    
-    # try:
-    #     gets_model = TransitionManager.objects.get(type = type.upper())
-    #     gets_action = Action.objects.get(description = action)
-    #     print(gets_model)
-    #     print(gets_action)
-    # except: 
-    #     raise ModelNotfound("no model found")
-    # def Transition_Handler():
-    #         gets_sign = gets_model.sign_required
-    #         if stage and gets_sign == 1:
-    #             ws = workflowitems.objects.create(type = gets_model , 
-    #             initial_state = gets_model.initial_state , interim_state = StateChoices.STATUS_AWAITING_SIGN_A,
-    #             final_state = gets_model.final_state , action = action , model_type = type , event_user = get_current_user())
-    #             workevents.objects.create(workitems = ws ,event_user = get_current_user() ,  from_state = gets_model.initial_state , action = action ,type = type)
-    #         else:
-    #             v = 0
-    #             try:
-    #                 for item in sign_list:
-    #                     b = sign_list[1 + v]
-    #                     print(b)
-    #                     c = b
-    #                     if b == sign_list[-1]:
-    #                         break
-    #                 print("the value is ", c)
-    #             except:
-    #                 print("cant do this ")
-    #         return None
-            # if stage and gets_sign == 2:
-            #     # qss = Workflowitems.objects.get(type = type)
-            #     # workevents.objects.create(workitems = qss.id , from_state = gets_model.initial_state , action = action ,
-            #     # event_user = request.user , type = type )
-            # else:
-            #     raise TransitionNotAllowed("unable to do transition")
-            # try : 
-            #     if stage == 1:
-            #         ws = Workflowitems.objects.create(type = gets_model , 
-            #         initial_state = gets_model.initial_state , interim_state = StateChoices.STATUS_AWAITING_SIGN_A,
-            #         final_state = gets_model.final_state , action = action , model_type = type )
-            #         we = workevents.objects.create(workitems = ws , from_state = gets_model.initial_state , action = action ,
-            #         type = type )
-            #         ws.save()
-            #         we.save()
-            #     else:
-            #         try:
-            #             gets_ttwf = Workflowitems.objects.get(Q(type__type__contains=type) | Q(id=id))
-            #         except:
-            #             raise MoreThanOneModel("either the type has ")
-            # except:
-            #     raise APIException("There was a problem!")
-    # return Transition_Handler()
+def scftransition(type ,action , stage , id):  
+    # db checking 
+    try:
+        gets_model = TransitionManager.objects.get(type = type.upper())
+        gets_sign = gets_model.sign_required
+        gets_action = Action.objects.get(description = action.upper())
+    except: 
+        raise ModelNotfound("no model found")
+    # sign length check 
+    if int(stage) <= int(gets_model.sign_required):
+        def Transition_Handler():
+            print("somethin")
+                
+                # if stage and gets_sign == 1:
+                #     ws = workflowitems.objects.create(type = gets_model , 
+                #     initial_state = gets_model.initial_state , interim_state = StateChoices.STATUS_AWAITING_SIGN_A,
+                #     final_state = gets_model.final_state , action = action , model_type = type , event_user = get_current_user())
+                #     workevents.objects.create(workitems = ws ,event_user = get_current_user() ,  from_state = gets_model.initial_state , action = action ,type = type)
+                # else:
+                #     v = 0
+                #     try:
+                #         for item in sign_list:
+                #             b = sign_list[1 + v]
+                #             print(b)
+                #             c = b
+                #             if b == sign_list[-1]:
+                #                 break
+                #         print("the value is ", c)
+                #     except:
+                #         print("cant do this ")
+                # return None
+                # # if stage and gets_sign == 2:
+                # #     # qss = Workflowitems.objects.get(type = type)
+                # #     # workevents.objects.create(workitems = qss.id , from_state = gets_model.initial_state , action = action ,
+                # #     # event_user = request.user , type = type )
+                # # else:
+                # #     try : 
+                # #         if stage == 1:
+                # #             ws = Workflowitems.objects.create(type = gets_model , 
+                # #             initial_state = gets_model.initial_state , interim_state = StateChoices.STATUS_AWAITING_SIGN_A,
+                # #             final_state = gets_model.final_state , action = action , model_type = type )
+                # #             we = workevents.objects.create(workitems = ws , from_state = gets_model.initial_state , action = action ,
+                # #             type = type )
+                # #             ws.save()
+                # #             we.save()
+                # #         else:
+                # #             try:
+                # #                 gets_ttwf = Workflowitems.objects.get(Q(type__type__contains=type) | Q(id=id))
+                # #             except:
+                # #                 raise MoreThanOneModel("either the type has ")
+                # #     except:
+                # #         raise APIException("There was a problem!")
+        return Transition_Handler()
+    else:
+        raise SignLengthError("either the stage nor the sign_required lenght mismatching")
     
 
 
@@ -147,7 +120,7 @@ def scftransition(type ,action , stage , id):
 
 
 def index(self):
-    scftransition(type = "PROGRAM" , action = "SUBMIT" , stage = 1 , id = 1)
+    scftransition(type = "PROGRAM" , action = "SUBMIT" , stage = 2 , id = 1)
     return HttpResponse(str("data"))
 
 

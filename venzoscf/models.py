@@ -76,6 +76,10 @@ class workevents(models.Model):
 class Action(models.Model):
     description = models.CharField(max_length=255 , blank = True , null=True)
 
+    def save(self, *args, **kwargs):
+        self.description = self.description.upper()
+        return super(Action,self).save(*args, **kwargs)
+
     def __str__(self):
         return self.description
 
