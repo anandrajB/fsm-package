@@ -16,9 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from venzoscf.views import index
+from venzoscf.views import DetailsListApiView, index
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',index)
+    path('',index),
+    path('myvalue/',DetailsListApiView.as_view())
 ]
