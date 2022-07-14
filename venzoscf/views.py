@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from venzoscf.choices import StateChoices
 from venzoscf.serializer import TransitionManagerserializer
+from venzoscf.testscase1 import Venzoscf
 from .models import TransitionManager , Action, workflowitems, workevents
 from django.db.models import Q
 from django.shortcuts import render
@@ -117,10 +118,10 @@ def scftransition(type ,action , stage , id):
 #     print(gets_wf)
 #     return test
 
-
+qs = Venzoscf()
 
 def index(self):
-    scftransition(type = "PROGRAM" , action = "SUBMIT" , stage = 2 , id = 1)
+    qs.transition(type = "PROGRAM")
     return HttpResponse(str("data"))
 
 
