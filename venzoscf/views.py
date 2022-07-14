@@ -17,6 +17,37 @@ class TransitionNotAllowed(Exception):
     pass
 
 
+
+sign_list = [
+    "INITIAL_SUBMIT",
+    "AWAITING_SIGN_A",
+    "AWAITING_SIGN_B",
+    "AWAITING_SIGN_C",
+    "AWAITING_SIGN_E",
+    "AWAITING_SIGN_F",
+    "AWAITING_SIGN_G",
+    "AWAITING_SIGN_H",
+    "AWAITING_SIGN_I",
+    "AWAITING_SIGN_J",
+    "AWAITING_SIGN_K",
+    "AWAITING_SIGN_L",
+    "AWAITING_SIGN_M",
+    "AWAITING_SIGN_N",
+    "AWAITING_SIGN_O",
+    "AWAITING_SIGN_P",
+    "AWAITING_SIGN_Q",
+    "AWAITING_SIGN_R",
+    "AWAITING_SIGN_S",
+    "AWAITING_SIGN_T",
+    "AWAITING_SIGN_U",
+    "AWAITING_SIGN_V",
+    "AWAITING_SIGN_W",
+    "AWAITING_SIGN_X",
+    "AWAITING_SIGN_Y",
+    "AWAITING_SIGN_Z",
+]
+
+
 class ActionNotFound(Exception):
     pass
 
@@ -39,30 +70,42 @@ class IDError(Exception):
 
 
 
+
 def myuser(request):
     return request.user
 
 def scftransition(type ,action , stage , id):
+    gets_model = TransitionManager.objects.get(type = type.upper())
+    if stage > gets_model.sign_required :
+        
     
-    try:
-        gets_model = TransitionManager.objects.get(type = type.upper())
-        gets_action = Action.objects.get(description = action)
-        print(gets_model)
-        print(gets_action)
-    except: 
-        raise ModelNotfound("no model found")
-    def Transition_Handler():
-            gets_sign = gets_model.sign_required
-            if stage and gets_sign == 1:
-                ws = workflowitems.objects.create(type = gets_model , 
-                initial_state = gets_model.initial_state , interim_state = StateChoices.STATUS_AWAITING_SIGN_A,
-                final_state = gets_model.final_state , action = action , model_type = type , event_user = get_current_user())
-                workevents.objects.create(workitems = ws ,event_user = get_current_user() ,  from_state = gets_model.initial_state , action = action ,
-                type = type)
-            else:
-                # gets_wf_id = Workflowitems.objects.get(Q(type__type__contains=type) | Q(id=id))
-                # for len_arr in range(1 , gets_model.
-                return None
+    # try:
+    #     gets_model = TransitionManager.objects.get(type = type.upper())
+    #     gets_action = Action.objects.get(description = action)
+    #     print(gets_model)
+    #     print(gets_action)
+    # except: 
+    #     raise ModelNotfound("no model found")
+    # def Transition_Handler():
+    #         gets_sign = gets_model.sign_required
+    #         if stage and gets_sign == 1:
+    #             ws = workflowitems.objects.create(type = gets_model , 
+    #             initial_state = gets_model.initial_state , interim_state = StateChoices.STATUS_AWAITING_SIGN_A,
+    #             final_state = gets_model.final_state , action = action , model_type = type , event_user = get_current_user())
+    #             workevents.objects.create(workitems = ws ,event_user = get_current_user() ,  from_state = gets_model.initial_state , action = action ,type = type)
+    #         else:
+    #             v = 0
+    #             try:
+    #                 for item in sign_list:
+    #                     b = sign_list[1 + v]
+    #                     print(b)
+    #                     c = b
+    #                     if b == sign_list[-1]:
+    #                         break
+    #                 print("the value is ", c)
+    #             except:
+    #                 print("cant do this ")
+    #         return None
             # if stage and gets_sign == 2:
             #     # qss = Workflowitems.objects.get(type = type)
             #     # workevents.objects.create(workitems = qss.id , from_state = gets_model.initial_state , action = action ,
@@ -85,7 +128,7 @@ def scftransition(type ,action , stage , id):
             #             raise MoreThanOneModel("either the type has ")
             # except:
             #     raise APIException("There was a problem!")
-    return Transition_Handler()
+    # return Transition_Handler()
     
 
 
