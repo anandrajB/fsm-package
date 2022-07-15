@@ -121,7 +121,7 @@ def scftransition(type ,action , stage , id):
 qs = Venzoscf()
 
 def index(self):
-    qs.transition(type = "PROGRAM")
+    qs.wf_event(type = "PROGRAM" , stage = 3)
     return HttpResponse(str("data"))
 
 

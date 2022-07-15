@@ -13,7 +13,9 @@ class TransitionManager(models.Model):
     from_state = models.CharField(max_length = 255)
     to_state = models.CharField(max_length = 255)
     sign_required = models.IntegerField()
-    sub_sign = models.IntegerField(default = 0 , editable= False)
+    sub_sign = models.IntegerField(default = 1 , editable= False)
+
+    # default 1 for initial submit and maker process
 
     def save(self, *args, **kwargs):
         self.type = self.type.upper()
