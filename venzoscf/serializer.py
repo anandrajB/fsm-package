@@ -10,6 +10,9 @@ class Workeventsserializer(serializers.ModelSerializer):
             'workitems',
             'action',
             'subaction',
+            'initial_state',
+            'interim_state',
+            'final_state',
         ]
 
 
@@ -24,6 +27,8 @@ class Workitemserializer(serializers.ModelSerializer):
             'transitionmanager',
             'initial_state',
             'interim_state',
+            'final_state',
+            'event_user',
             'workflowevent'
         ]
 
@@ -37,9 +42,6 @@ class TransitionManagerserializer(serializers.ModelSerializer):
         model = TransitionManager
         fields = [
             'type',
-            'from_state',
-            'to_state',
-            'sign_required',
             'workflowitems'
         ]
 
