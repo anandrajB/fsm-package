@@ -1,25 +1,27 @@
+from asyncore import read
 from rest_framework import serializers
 from .models import TransitionManager , workevents , workflowitems , Action
 
 
 class Workeventsserializer(serializers.ModelSerializer):
+    event_user = serializers.SlugRelatedField(read_only=True,slug_field = "username")
     class Meta:
         model = workevents
         fields = [
             'id',
-            'workitems',
             'action',
             'subaction',
             'initial_state',
             'interim_state',
             'final_state',
+            'event_user'
         ]
 
 
 
 
 class Workitemserializer(serializers.ModelSerializer):
-    workflowevent = Workeventsserializer(many=True, read_only=True)
+    WorkFlowEvents = Workeventsserializer(many=True, read_only=True)
     class Meta:
         model = workflowitems
         fields = [
@@ -29,18 +31,20 @@ class Workitemserializer(serializers.ModelSerializer):
             'interim_state',
             'final_state',
             'event_user',
-            'workflowevent'
+            'WorkFlowEvents',
         ]
 
 
 
 
+
+
 class TransitionManagerserializer(serializers.ModelSerializer):
-    workflowitems = Workitemserializer(read_only=True)
-    # workevents = Workeventsserializer(read_only=True)
+    workflowitems = Workitemserializer(read_only = True)
     class Meta:
         model = TransitionManager
         fields = [
+            'id',
             'type',
             'workflowitems'
         ]
@@ -50,4 +54,17 @@ class TransitionManagerserializer(serializers.ModelSerializer):
 class Actionseriaizer(serializers.ModelSerializer):
     class Meta:
         model = Action
+        fields = '__all__'
+
+
+
+class workflowitemslistserializer(serializers.ModelSerializer):
+    class Meta:
+        model = workflowitems
+        fields = '__all__'
+
+
+class workeventslistserializer(serializers.ModelSerializer):
+    class Meta:
+        model = workevents
         fields = '__all__'

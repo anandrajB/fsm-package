@@ -2,7 +2,7 @@ from django.db import models
 from django.conf import settings
 # from django.contrib.postgres.fields import ArrayField
 
-from middleware import get_current_user
+from venzoscf.middleware import get_current_user
 
 
 
@@ -30,7 +30,7 @@ class TransitionManager(models.Model):
 class workflowitems(models.Model):
     
     created_date = models.DateTimeField(auto_now_add=True)
-    transitionmanager = models.ForeignKey(TransitionManager, on_delete=models.CASCADE,blank=True, null=True )
+    transitionmanager = models.OneToOneField(TransitionManager, on_delete=models.CASCADE,blank=True, null=True )
     initial_state  = models.CharField(max_length=50,default = 'DRAFT')
     interim_state = models.CharField(max_length=50,default = 'DRAFT')
     final_state = models.CharField(max_length=50,default = 'DRAFT')
@@ -51,7 +51,7 @@ class workflowitems(models.Model):
 # WORKEVENTS
 class workevents(models.Model):
 
-    workitems = models.ForeignKey(workflowitems, on_delete=models.CASCADE, related_name='workflowevent')
+    workflowitems = models.ForeignKey(workflowitems, on_delete=models.CASCADE , related_name='WorkFlowEvents')
     action = models.CharField(max_length=25, blank=True, null=True)
     subaction = models.CharField(max_length=55 , blank=True, null=True)
     initial_state  = models.CharField(max_length=50 , default = 'DRAFT')

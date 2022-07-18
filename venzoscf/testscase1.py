@@ -57,7 +57,7 @@ class Venzoscf:
                         initial_state = gets_action.from_state , interim_state = gets_action.to_state or sign_list[0], transitionmanager = gets_model or gets_model_id, 
                         final_state = gets_action.to_state , action = action , model_type = type.upper() , event_user = get_current_user())
 
-                        workevents.objects.create(workitems = ws ,event_user = get_current_user() ,  initial_state = gets_action.initial_state , 
+                        workevents.objects.create(workflowitems = ws ,event_user = get_current_user() ,  initial_state = gets_action.initial_state , 
                         interim_state = None,final_state = gets_action.to_state, action = action ,type = type.upper() , final_value =  "YES")
                     # final transition
                     if stage == gets_sign:
@@ -66,7 +66,7 @@ class Venzoscf:
                         initial_state = gets_model.initial_state , interim_state = gets_model.to_state,transitionmanager = gets_model or gets_model_id,
                         final_state = gets_model.final_state , action = action , model_type = type.upper() , event_user = get_current_user())
 
-                        workevents.objects.create(workitems = gets_wf ,event_user = get_current_user() ,  initial_state = gets_action.initial_state ,
+                        workevents.objects.create(workflowitems = gets_wf ,event_user = get_current_user() ,  initial_state = gets_action.initial_state ,
                         interim_state = gets_action.to_state ,final_state = gets_action.to_state,action = action ,type = type.upper() , final_value =  "YES")
                     # inbetween actions and trans
                     else:
@@ -74,7 +74,7 @@ class Venzoscf:
                         initial_state = gets_model.initial_state , interim_state = sign_list[stage],transitionmanager = gets_model or gets_model_id,
                         final_state = gets_model.final_state , action = action , model_type = type.upper() , event_user = get_current_user())
 
-                        workevents.objects.create(workitems = gets_wf ,event_user = get_current_user() ,  initial_state = gets_action.initial_state ,
+                        workevents.objects.create(workflowitems = gets_wf ,event_user = get_current_user() ,  initial_state = gets_action.initial_state ,
                         interim_state = sign_list[stage] ,final_state = gets_action.to_state,action = action ,type = type.upper())
                         # trans_length = int(stage) - int(gets_model.sign_required)
                         # if trans_length != 1 and int(stage) == int(gets_sign):
@@ -95,7 +95,7 @@ class Venzoscf:
                         
                         # if stage and gets_sign == 2:
                         #     # qss = Workflowitems.objects.get(type = type)
-                        #     # workevents.objects.create(workitems = qss.id , from_state = gets_model.initial_state , action = action ,
+                        #     # workevents.objects.create(workflowitems = qss.id , from_state = gets_model.initial_state , action = action ,
                         #     # event_user = request.user , type = type )
                         # else:
                         #     try : 
@@ -103,7 +103,7 @@ class Venzoscf:
                         #             ws = Workflowitems.objects.create(type = gets_model , 
                         #             initial_state = gets_model.initial_state , interim_state = StateChoices.STATUS_AWAITING_SIGN_A,
                         #             final_state = gets_model.final_state , action = action , model_type = type )
-                        #             we = workevents.objects.create(workitems = ws , from_state = gets_model.initial_state , action = action ,
+                        #             we = workevents.objects.create(workflowitems = ws , from_state = gets_model.initial_state , action = action ,
                         #             type = type )
                         #             ws.save()
                         #             we.save()
