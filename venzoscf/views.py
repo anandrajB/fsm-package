@@ -6,13 +6,15 @@ from rest_framework.generics import ListAPIView , ListCreateAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
+from venzoscf.testscase1 import Venzoscf
 
 
 
+qs = Venzoscf()
 
 
 def index(self):
-    
+    qs.transition(type = "program" , action = "submit" , stage = 1)
     return HttpResponse(str("data"))
 
 

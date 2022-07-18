@@ -44,12 +44,12 @@ class Venzoscf:
     def transition(self, type ,action , stage , id = None):
         try:
             gets_model = TransitionManager.objects.get(type = type.upper())
-            gets_model_id = TransitionManager.objects.get(id = id)
+            # gets_model_id = TransitionManager.objects.get(id = id )
             gets_action = Action.objects.get(description = action.upper())
         except: 
             raise ModelNotfound("no model found check transition manager and action table ")
     # sign length check 
-        if int(stage) <= int(gets_model.sign_required) and stage == 0:
+        if stage == 0:
             def Transition_Handler():
                     gets_sign = gets_action.sign_required
                     if stage and gets_sign == 1:
