@@ -77,7 +77,7 @@ class Action(models.Model):
     type = models.ForeignKey(TransitionManager , on_delete = models.CASCADE)
     from_state = models.CharField(max_length=255 , default = "DRAFT")
     to_state = models.CharField(max_length=255 , default = "DRAFT")
-    sign_required =  models.IntegerField()
+    sign_required =  models.IntegerField(default = 1)
 
     def save(self, *args, **kwargs):
         self.description = self.description.upper()

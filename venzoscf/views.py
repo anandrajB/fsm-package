@@ -6,7 +6,7 @@ from .models import TransitionManager , Action, workflowitems, workevents
 from django.db.models import Q
 from django.shortcuts import render
 from rest_framework.exceptions import APIException
-from myapp.middleware import get_current_user
+from venzoscf.middleware import get_current_user
 from rest_framework.generics import ListAPIView , ListCreateAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -59,8 +59,7 @@ def scftransition(type ,action , stage , id):
     # sign length check 
     if int(stage) <= int(gets_model.sign_required):
         def Transition_Handler():
-            print("somethin")
-                
+            print("something")
                 # if stage and gets_sign == 1:
                 #     ws = workflowitems.objects.create(type = gets_model , 
                 #     initial_state = gets_model.initial_state , interim_state = StateChoices.STATUS_AWAITING_SIGN_A,
@@ -121,7 +120,7 @@ def scftransition(type ,action , stage , id):
 qs = Venzoscf()
 
 def index(self):
-    qs.wf_event(type = "PROGRAM" , stage = 3)
+    
     return HttpResponse(str("data"))
 
 
