@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import TransitionManager , workevents , workflowitems
+from .models import TransitionManager , workevents , workflowitems , Action
 
 
 class Workeventsserializer(serializers.ModelSerializer):
@@ -45,3 +45,7 @@ class TransitionManagerserializer(serializers.ModelSerializer):
 
 
 
+class Actionseriaizer(serializers.ModelSerializer):
+    class Meta:
+        model = Action
+        fields = '__all__'

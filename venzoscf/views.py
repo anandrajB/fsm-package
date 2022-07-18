@@ -1,13 +1,13 @@
 from django.http import HttpResponse
 from venzoscf.choices import StateChoices
-from venzoscf.serializer import TransitionManagerserializer
+from venzoscf.serializer import Actionseriaizer, TransitionManagerserializer
 from venzoscf.testscase1 import Venzoscf
 from .models import TransitionManager , Action, workflowitems, workevents
 from django.db.models import Q
 from django.shortcuts import render
 from rest_framework.exceptions import APIException
 from myapp.middleware import get_current_user
-from rest_framework.generics import ListAPIView
+from rest_framework.generics import ListAPIView , ListCreateAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
@@ -127,6 +127,9 @@ def index(self):
 
 
 
+
+### API ###
+
 class DetailsListApiView(ListAPIView):
     queryset = TransitionManager.objects.all()
     serializer_class = TransitionManagerserializer
@@ -136,3 +139,27 @@ class DetailsListApiView(ListAPIView):
         queryset = TransitionManager.objects.all()
         serializer = TransitionManagerserializer(queryset, many=True)
         return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
+
+
+
+
+
+# action create and list api 
+
+
+class ActionListApi(ListCreateAPIView):
+    queryset = Action.objects.all()
+    serializer_class = Actionseriaizer
+    permission_classes = [IsAuthenticated]
+
+    def list(self, request):
+        queryset = Action.objects.all()
+        serializer = Actionseriaizer(queryset, many=True)
+        return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        serializer = Actionseriaizer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"status": "success", "data": serializer.data}, status=status.HTTP_201_CREATED)
+        return Response({"status": "failure", "data": serializer.errors},status=status.HTTP_204_NO_CONTENT)

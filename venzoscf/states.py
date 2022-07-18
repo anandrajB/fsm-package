@@ -1,6 +1,10 @@
 # sign list fixed  , can be changed dynamically in future
 
+from rsa import sign
+
+
 sign_list = [
+    "NO_SIGN",
     "AWAITING_SIGN_A",
     "AWAITING_SIGN_B",
     "AWAITING_SIGN_C",
@@ -28,3 +32,4 @@ sign_list = [
     "AWAITING_SIGN_Y",
     "AWAITING_SIGN_Z",
 ]
+
