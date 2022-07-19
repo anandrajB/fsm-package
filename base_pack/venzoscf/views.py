@@ -137,9 +137,8 @@ qs = Venzoscf()
 
 
 def index(self):
-    # transition2(stage = 3)
-    qs.transition(type = "PROGRAM" , action = "submit" , stage = 3)
-    return HttpResponse(str("data"))
+    # transition2(stage = 
+    return HttpResponse(str("hello world from venzo tech"))
 
 
 
