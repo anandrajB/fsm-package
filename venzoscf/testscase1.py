@@ -51,13 +51,15 @@ class Venzoscf:
         if id is not None:
             gets_model_id = TransitionManager.objects.get(id = id )
         else:
-            raise ModelNotfound("no transition model found on this id")
-        if stage != gets_model.sub_sign:
+            print("no transition model found on this id")
+        if stage == gets_model.sub_sign:
             if  gets_action.sign_required >= stage:
                 def Transition_Handler():
                         gets_sign = gets_action.sign_required
                         if stage and gets_sign == 0:
+                            print("1")
                             gets_model.sub_sign = stage
+                            gets_model.save()
                             ws = workflowitems.objects.create(
                             initial_state = gets_action.from_state , interim_state = gets_action.to_state or sign_list[0], transitionmanager = gets_model or gets_model_id, 
                             final_state = gets_action.to_state , action = action , model_type = type.upper() , event_user = get_current_user())
@@ -66,7 +68,9 @@ class Venzoscf:
                             interim_state = gets_action.to_state,final_state = gets_action.to_state, action = action ,type = type.upper() , final_value =  "YES")
                         
                         if stage == 0 :
-                            gets_model.sub_sign = stage
+                            print("2")
+                            gets_model.sub_sign = stage + 1
+                            gets_model.save()
                             ws = workflowitems.objects.create(
                             initial_state = gets_action.from_state , interim_state = sign_list[1], transitionmanager = gets_model or gets_model_id, 
                             final_state = gets_action.to_state , action = action , model_type = type.upper() , event_user = get_current_user())
@@ -75,7 +79,9 @@ class Venzoscf:
                             interim_state = sign_list[1],final_state = gets_action.to_state, action = action ,type = type.upper() , final_value =  "YES")
                         # final transition
                         elif stage == gets_sign:
+                            print("3")
                             gets_model.sub_sign = stage
+                            gets_model.save()
                             gets_wf = gets_wf_item(gets_model)
                             workflowitems.objects.filter(id = int(gets_wf.id)).update(
                             initial_state = gets_action.from_state , interim_state = gets_action.to_state,transitionmanager = gets_model.id or gets_model_id,
@@ -85,14 +91,16 @@ class Venzoscf:
                             interim_state = gets_action.to_state ,final_state = gets_action.to_state,action = action ,type = type.upper() , final_value =  "YES")
                         # inbetween actions and trans
                         else:
+                            print("4")
                             gets_wf = gets_wf_item(gets_model)
-                            gets_model.sub_sign = stage
+                            gets_model.sub_sign = stage + 1
+                            gets_model.save()
                             workflowitems.objects.filter(id = int(gets_wf.id)).update(
-                            initial_state = gets_action.from_state , interim_state = sign_list[stage],transitionmanager = gets_model or gets_model_id,
+                            initial_state = gets_action.from_state , interim_state = sign_list[1 + stage],transitionmanager = gets_model or gets_model_id,
                             final_state = gets_action.to_state , action = action , model_type = type.upper() , event_user = get_current_user())
 
                             workevents.objects.create(workflowitems = gets_wf ,event_user = get_current_user() ,  initial_state = gets_action.from_state ,
-                            interim_state = sign_list[stage] ,final_state = gets_action.to_state,action = action ,type = type.upper())
+                            interim_state = sign_list[1 + stage] ,final_state = gets_action.to_state,action = action ,type = type.upper())
 
 
 
