@@ -156,7 +156,7 @@ class DetailsListApiView(ListAPIView):
         type = self.request.query_params.get('type')
         if type is None:
             queryset = TransitionManager.objects.all()
-        queryset = TransitionManager.objects.filter(type=type.upper())
+        queryset = TransitionManager.objects.filter(type=type)
         return queryset
 
     def list(self, request):
