@@ -32,3 +32,33 @@ sign_list = [
     "AWAITING_SIGN_Z",
 ]
 
+
+sub_action = [
+    "MAKER",
+    "SIGN_A",
+    "SIGN_B",
+    "SIGN_C",
+    "SIGN_D",
+    "SIGN_E",
+    "SIGN_F",
+    "SIGN_G",
+    "SIGN_H",
+    "SIGN_I",
+    "SIGN_J",
+    "SIGN_K",
+    "SIGN_L",
+    "SIGN_M",
+    "SIGN_N",
+    "SIGN_O",
+    "SIGN_P",
+    "SIGN_Q",
+    "SIGN_R",
+    "SIGN_S",
+    "SIGN_T",
+    "SIGN_U",
+    "SIGN_V",
+    "SIGN_W",
+    "SIGN_X",
+    "SIGN_Y",
+    "SIGN_Z",
+]

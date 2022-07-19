@@ -1,13 +1,14 @@
 from django.http import HttpResponse
-from .models import TransitionManager , Action, workevents, workflowitems
-from .serializer import TransitionManagerserializer , Actionseriaizer, Workitemserializer, workeventslistserializer
-from .middleware import get_current_user
+from venzoscf.models import TransitionManager , Action, workevents, workflowitems
+from venzoscf.serializer import TransitionManagerserializer , Actionseriaizer, Workitemserializer, workeventslistserializer, workflowitemslistserializer
+from venzoscf.middleware import get_current_user
 from rest_framework.generics import ListAPIView , ListCreateAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
-from .testscase1 import Venzoscf, transition2
+from venzoscf.testscase1 import Venzoscf, transition2
 
+from venzoscf.testscase1 import Venzoscf
 
 
 qs = Venzoscf()
@@ -31,6 +32,13 @@ class DetailsListApiView(ListAPIView):
     queryset = TransitionManager.objects.all()
     serializer_class = TransitionManagerserializer
     permission_classes = [IsAuthenticated]
+
+    def get_queryset(self, request):
+        type = self.request.query_params.get('type')
+        if type is None:
+            queryset = TransitionManager.objects.all()
+        queryset = TransitionManager.objects.filter(type=type)
+        return queryset
 
     def list(self, request):
         queryset = TransitionManager.objects.all()

@@ -19,7 +19,7 @@ qs = Venzoscf()
 
 def index(self):
     # transition2(stage = 3)
-    qs.transition(type = "INVOICE" , action = "submit" , stage = 0)
+    qs.transition(type = "PROGRAM" , action = "submit" , stage = 4)
     return HttpResponse(str("data"))
 
 
@@ -32,6 +32,13 @@ class DetailsListApiView(ListAPIView):
     queryset = TransitionManager.objects.all()
     serializer_class = TransitionManagerserializer
     permission_classes = [IsAuthenticated]
+
+    def get_queryset(self, request):
+        type = self.request.query_params.get('type')
+        if type is None:
+            queryset = TransitionManager.objects.all()
+        queryset = TransitionManager.objects.filter(type=type)
+        return queryset
 
     def list(self, request):
         queryset = TransitionManager.objects.all()
