@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from venzoscf.testscase1 import Venzoscf, transition2
 
+from venzoscf.testscase1 import Venzoscf
 
 
 qs = Venzoscf()
