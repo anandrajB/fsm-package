@@ -1,6 +1,6 @@
 from venzoscf.models import TransitionManager , Action , workflowitems , workevents
 from venzoscf.middleware import get_current_user
-from venzoscf.exception import ModelNotfound , SignLengthError
+from venzoscf.exception import ModelNotfound , SignLengthError, TransitionNotAllowed
 from venzoscf.states import sign_list
 from venzoscf.choices import StateChoices
 
@@ -52,79 +52,93 @@ class Venzoscf:
             gets_model_id = TransitionManager.objects.get(id = id )
         else:
             print("model id not found")
-        if stage != 0  and gets_action.sign_required >= stage:
-            def Transition_Handler():
-                    gets_sign = gets_action.sign_required
-                    if stage == 1 :
-                        ws = workflowitems.objects.create(
-                        initial_state = gets_action.from_state , interim_state = gets_action.to_state or sign_list[0], transitionmanager = gets_model.id or gets_model_id, 
-                        final_state = gets_action.to_state , action = action , model_type = type.upper() , event_user = get_current_user())
-
-                        workevents.objects.create(workflowitems = ws ,event_user = get_current_user() ,  initial_state = gets_action.from_state , 
-                        interim_state = gets_action.to_state,final_state = gets_action.to_state, action = action ,type = type.upper() , final_value =  "YES")
-                    # final transition
-                    elif stage == gets_sign:
-                        gets_wf = gets_wf_item(gets_model)
-                        workflowitems.objects.filter(id = int(gets_wf.id)).update(
-                        initial_state = gets_action.from_state , interim_state = gets_action.to_state,transitionmanager = gets_model.id or gets_model_id,
-                        final_state = gets_action.to_state , action = action , model_type = type.upper() , event_user = get_current_user())
-
-                        workevents.objects.create(workflowitems = gets_wf ,event_user = get_current_user() ,  initial_state = gets_action.from_state ,
-                        interim_state = gets_action.to_state ,final_state = gets_action.to_state,action = action ,type = type.upper() , final_value =  "YES")
-                    # inbetween actions and trans
-                    else:
-                        gets_wf = gets_wf_item(gets_model)
-                        gets_model.sub_sign = stage
-                        workflowitems.objects.filter(id = int(gets_wf.id)).update(
-                        initial_state = gets_action.from_state , interim_state = sign_list[stage],transitionmanager = gets_model or gets_model_id,
-                        final_state = gets_action.to_state , action = action , model_type = type.upper() , event_user = get_current_user())
-
-                        workevents.objects.create(workflowitems = gets_wf ,event_user = get_current_user() ,  initial_state = gets_action.from_state ,
-                        interim_state = sign_list[stage] ,final_state = gets_action.to_state,action = action ,type = type.upper())
-
-
-
-                        # trans_length = int(stage) - int(gets_model.sign_required)
-                        # if trans_length != 1 and int(stage) == int(gets_sign):
-                        #     trans_length_var = trans_length - 1
-                        # else:
-                            # while stage == True:
-                        #     try:
-                        #             for item in sign_list:
-                        #                 b = sign_list[1 + trans_length_var]
-                        #                 print(b)
-                        #                 c = b
-                        #                 if b == sign_list[-1]:
-                        #                     break
-                        #             print("the value is ", c)
-                        #     except:
-                        #             print("cant do this ")
-                        #     return None
+        if stage != gets_model.sub_sign:
+            if  gets_action.sign_required >= stage:
+                def Transition_Handler():
+                        gets_sign = gets_action.sign_required
+                        if stage and gets_sign == 0:
+                            gets_model.sub_sign = stage
+                            ws = workflowitems.objects.create(
+                            initial_state = gets_action.from_state , interim_state = gets_action.to_state or sign_list[0], transitionmanager = gets_model or gets_model_id, 
+                            final_state = gets_action.to_state , action = action , model_type = type.upper() , event_user = get_current_user())
+                            
+                            workevents.objects.create(workflowitems = ws ,event_user = get_current_user() ,  initial_state = gets_action.from_state , 
+                            interim_state = gets_action.to_state,final_state = gets_action.to_state, action = action ,type = type.upper() , final_value =  "YES")
                         
-                        # if stage and gets_sign == 2:
-                        #     # qss = Workflowitems.objects.get(type = type)
-                        #     # workevents.objects.create(workflowitems = qss.id , from_state = gets_action.from , action = action ,
-                        #     # event_user = request.user , type = type )
-                        # else:
-                        #     try : 
-                        #         if stage == 1:
-                        #             ws = Workflowitems.objects.create(type = gets_model , 
-                        #             initial_state = gets_action.from , interim_state = StateChoices.STATUS_AWAITING_SIGN_A,
-                        #             final_state = gets_action.to_state , action = action , model_type = type )
-                        #             we = workevents.objects.create(workflowitems = ws , from_state = gets_action.from , action = action ,
-                        #             type = type )
-                        #             ws.save()
-                        #             we.save()
-                        #         else:
-                        #             try:
-                        #                 gets_ttwf = Workflowitems.objects.get(Q(type__type__contains=type) | Q(id=id))
-                        #             except:
-                        #                 raise MoreThanOneModel("either the type has ")
-                        #     except:
-                        #         raise APIException("There was a problem!")`
-            return Transition_Handler()
+                        if stage == 0 :
+                            gets_model.sub_sign = stage
+                            ws = workflowitems.objects.create(
+                            initial_state = gets_action.from_state , interim_state = sign_list[1], transitionmanager = gets_model or gets_model_id, 
+                            final_state = gets_action.to_state , action = action , model_type = type.upper() , event_user = get_current_user())
+                            
+                            workevents.objects.create(workflowitems = ws ,event_user = get_current_user() ,  initial_state = gets_action.from_state , 
+                            interim_state = sign_list[1],final_state = gets_action.to_state, action = action ,type = type.upper() , final_value =  "YES")
+                        # final transition
+                        elif stage == gets_sign:
+                            gets_model.sub_sign = stage
+                            gets_wf = gets_wf_item(gets_model)
+                            workflowitems.objects.filter(id = int(gets_wf.id)).update(
+                            initial_state = gets_action.from_state , interim_state = gets_action.to_state,transitionmanager = gets_model.id or gets_model_id,
+                            final_state = gets_action.to_state , action = action , model_type = type.upper() , event_user = get_current_user())
+
+                            workevents.objects.create(workflowitems = gets_wf ,event_user = get_current_user() ,  initial_state = gets_action.from_state ,
+                            interim_state = gets_action.to_state ,final_state = gets_action.to_state,action = action ,type = type.upper() , final_value =  "YES")
+                        # inbetween actions and trans
+                        else:
+                            gets_wf = gets_wf_item(gets_model)
+                            gets_model.sub_sign = stage
+                            workflowitems.objects.filter(id = int(gets_wf.id)).update(
+                            initial_state = gets_action.from_state , interim_state = sign_list[stage],transitionmanager = gets_model or gets_model_id,
+                            final_state = gets_action.to_state , action = action , model_type = type.upper() , event_user = get_current_user())
+
+                            workevents.objects.create(workflowitems = gets_wf ,event_user = get_current_user() ,  initial_state = gets_action.from_state ,
+                            interim_state = sign_list[stage] ,final_state = gets_action.to_state,action = action ,type = type.upper())
+
+
+
+                            # trans_length = int(stage) - int(gets_model.sign_required)
+                            # if trans_length != 1 and int(stage) == int(gets_sign):
+                            #     trans_length_var = trans_length - 1
+                            # else:
+                                # while stage == True:
+                            #     try:
+                            #             for item in sign_list:
+                            #                 b = sign_list[1 + trans_length_var]
+                            #                 print(b)
+                            #                 c = b
+                            #                 if b == sign_list[-1]:
+                            #                     break
+                            #             print("the value is ", c)
+                            #     except:
+                            #             print("cant do this ")
+                            #     return None
+                            
+                            # if stage and gets_sign == 2:
+                            #     # qss = Workflowitems.objects.get(type = type)
+                            #     # workevents.objects.create(workflowitems = qss.id , from_state = gets_action.from , action = action ,
+                            #     # event_user = request.user , type = type )
+                            # else:
+                            #     try : 
+                            #         if stage == 1:
+                            #             ws = Workflowitems.objects.create(type = gets_model , 
+                            #             initial_state = gets_action.from , interim_state = StateChoices.STATUS_AWAITING_SIGN_A,
+                            #             final_state = gets_action.to_state , action = action , model_type = type )
+                            #             we = workevents.objects.create(workflowitems = ws , from_state = gets_action.from , action = action ,
+                            #             type = type )
+                            #             ws.save()
+                            #             we.save()
+                            #         else:
+                            #             try:
+                            #                 gets_ttwf = Workflowitems.objects.get(Q(type__type__contains=type) | Q(id=id))
+                            #             except:
+                            #                 raise MoreThanOneModel("either the type has ")
+                            #     except:
+                            #         raise APIException("There was a problem!")`
+                return Transition_Handler()
+            else:
+                raise SignLengthError("either the stage nor the sign_required length mismatching and the stage should not be zero ")
         else:
-            raise SignLengthError("either the stage nor the sign_required length mismatching and the stage should not be zero ")
+            raise TransitionNotAllowed("TransitionNotAllowed check your sub_sign is 1 or null")
 
 
     

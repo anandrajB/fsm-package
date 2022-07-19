@@ -18,7 +18,7 @@ qs = Venzoscf()
 
 def index(self):
     # transition2(stage = 3)
-    qs.transition(type = "program" , action = "submit" , stage = 3)
+    qs.transition(type = "INVOICE" , action = "submit" , stage = 0)
     return HttpResponse(str("data"))
 
 

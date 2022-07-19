@@ -31,4 +31,3 @@ sign_list = [
     "AWAITING_SIGN_Y",
     "AWAITING_SIGN_Z",
 ]
-
