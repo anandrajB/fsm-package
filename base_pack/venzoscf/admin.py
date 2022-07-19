@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Action, TransitionManager, workflowitems, workevents
+from venzoscf.models import Action, TransitionManager, workflowitems, workevents
 # Register your models here.
 
 

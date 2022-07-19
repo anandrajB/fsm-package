@@ -1,4 +1,6 @@
 
+## BASIC EXCEPTION CLASSES 
+
 
 class ActionNotFound(Exception):
     pass

@@ -31,7 +31,7 @@ class SetCurrentUser:
         _do_set_current_user(lambda self: None)
 
 
-class ThreadLocalUserMiddleware(object):
+class TransitionUserMiddleware(object):
 
     def __init__(self, get_response):
         self.get_response = get_response

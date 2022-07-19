@@ -1,4 +1,4 @@
-from .views import DetailsListApiView , ActionListApi, WorkEventsListApi, WorkFlowitemsListApi
+from venzoscf.views import DetailsListApiView , ActionListApi, WorkEventsListApi, WorkFlowitemsListApi
 from django.urls import path
 
 
