@@ -51,7 +51,7 @@ class Venzoscf:
         if id is not None:
             gets_model_id = TransitionManager.objects.get(id = id )
         else:
-            print("model id not found")
+            raise ModelNotfound("no transition model found on this id")
         if stage != gets_model.sub_sign:
             if  gets_action.sign_required >= stage:
                 def Transition_Handler():
