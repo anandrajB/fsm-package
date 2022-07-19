@@ -1,18 +1,24 @@
 from django.http import HttpResponse
-from venzoscf.models import TransitionManager , Action, workevents, workflowitems
-from venzoscf.serializer import TransitionManagerserializer , Actionseriaizer, Workitemserializer, workeventslistserializer, workflowitemslistserializer
-from venzoscf.middleware import get_current_user
+from .models import TransitionManager , Action, workevents, workflowitems
+from .serializer import TransitionManagerserializer , Actionseriaizer, Workitemserializer, workeventslistserializer
+from .middleware import get_current_user
 from rest_framework.generics import ListAPIView , ListCreateAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
+from .testscase1 import Venzoscf, transition2
+
+
+
+qs = Venzoscf()
 
 
 
 
 
 def index(self):
-    
+    # transition2(stage = 3)
+    qs.transition(type = "INVOICE" , action = "submit" , stage = 0)
     return HttpResponse(str("data"))
 
 

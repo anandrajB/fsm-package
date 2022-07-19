@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 
-from venzoscf.choices import StateChoices
+from .choices import StateChoices
 from .models import TransitionManager , Action, Workflowitems, workevents
 import functools
 from django.template import RequestContext

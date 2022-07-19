@@ -2,7 +2,7 @@ from django.db import models
 from django.conf import settings
 # from django.contrib.postgres.fields import ArrayField
 
-from venzoscf.middleware import get_current_user
+from .middleware import get_current_user
 
 
 
@@ -10,7 +10,7 @@ from venzoscf.middleware import get_current_user
 
 class TransitionManager(models.Model):
     type = models.CharField(max_length = 255 , unique = True)
-    sub_sign = models.IntegerField(default = 1 , editable= False)
+    sub_sign = models.IntegerField(default = 0 , editable = False)
 
     # default 1 for initial submit and maker process
 
