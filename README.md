@@ -108,3 +108,9 @@ def index():
 
 For support, email support@venzo.com .
 
+
+## Future
+    
+1. postgres support
+2. next_Avail_transitions
+
