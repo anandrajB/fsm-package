@@ -27,6 +27,8 @@ myhandler = Venzoscf()
 
 #simple function
 
+**required arguments -> type , action ,stage , id(optional)
+
 def index():
     myhandler.transition(type = "PROGRAM",action = "submit" ,stage = 0)
     return HttpResponse({"data"})
