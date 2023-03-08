@@ -1,116 +1,188 @@
-
 # SCF_FSM_PACKAGE
 
-A resuable django application that can handle transition and workflow's in your project .
+![Logo](https://finflo-test.netlify.app/static/media/finfloLogo.52c3039f.svg)
+
+A resuable python django package that can handle state transition in your django application .
+
+## Description
+- Finflo is designed to carry on FSM transition on your django application .
+- Your state transition's are made easy with finflo
+- customizable Actions and states with on_flow interchangable
+- Pre installed signature levels for each action
+
+## TECHNOLOGY STACK
+[![https://www.python.org/](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![DJANGO](https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=white)](https://www.djangoproject.com/)
+[![DjangoREST](https://img.shields.io/badge/DJANGO-REST-ff1709?style=for-the-badge&logo=django&logoColor=white&color=ff1709&labelColor=gray)](https://www.django-rest-framework.org/)
+
+## IMPORTANT LINKS 
+
+1. [Documentation](https://documenter.getpostman.com/view/11858287/2s8YmUJyvy)
+2. [Postman collection](https://api.postman.com/collections/11858287-f9ff5270-991d-4782-9fab-c034597f3f43?access_key=PMAT-01GJCW5ZKHZM68NWKCNW7KDJP2)
+
 
 
 ## Authors
 
 - [@anandrajB](https://github.com/anandrajB)
-- [@Mohamed-Sheik-Ali](https://github.com/Mohamed-Sheik-Ali)
 
 
-## Installation
+## Prerequisite
+- python
+- Django
+- Django-rest-framework
 
-Install scf_fsm_package with pip
+## 1. Installation 
+
+### 1.1 Initial setup
+
+- Install finflo using [pip](https://pypi.org/project/finflo/)
 
 ```bash
-pip install django-venzo-scf==1.0.5
+pip install finflo
 ```
 
-In your django application , browse to installed_apps section 
-and add this ,
+- In your django application , browse to installed_apps section in settings.py and add this ,
 
 ```bash
 INSTALLED_APPS = [
-    'venzoscf'
+    'finflo',
+    'rest_framework'
 ]
 ```
+- Add this in your settings.py 
 
-now navigate to the middleware section and add the venzoscf middleware
+```bash
+FINFLO = {
+    'WORK_MODEL' : ['MyApp.Model','MyApp2.Model2'],
+    'PARTY_MODEL' : [] #optional
+}
+```
+- The PARTY_TYPE is optional , if it is not needed you can leave it as blank like this []
 
+- Navigate to the middleware section in your settings.py and add the finflo middleware
 
 ```
 MIDDLEWARE = [
-    'venzoscf.middleware.TransitionUserMiddleware',
+    'finflo.middleware.TransitionUserMiddleware',
 ]
 ```
 
-#### Additional Api (optional)
-
-In your application's urls.py , you can include venzoscf's api urls for browsable api's 
-
-** make sure that you have installed [DjangoRestFramework](https://www.django-rest-framework.org/#installation)
-
-
-Now add this peice of code in your urls.py
+- Now add this peice of code in your urls.py
 
 ```
 urlpatterns = [
-    path('', include('venzoscf.urls'))
+    path('', include('finflo.urls'))
 ]
 ```
+### 1.2 Migrations
 
-## Usage/Examples
+- once all the steps done from the above section 1.1 .
+- now we can apply the migrations for the database using ,
+```
+- python manage.py makemigrations
+```
+```
+- python manage.py migrate 
+```
+
+### 1.3 Re-migrate
+- ***scenario 1*** : if any new values is added to the **WORK_MODEL**
+- ***example for scenario 1 :***
+```
+# see 1.1 
+
+FINFLO = {
+    'WORK_MODEL' : ['MyApp.Model','MyApp2.Model2','MyApp3.Model3'],
+    'PARTY_TYPE' : ['MyApp1.Model1'] 
+}
+
+```
+- In the above 1.1 , you can see *MyApp3.Model3* is newly addded 
+- Now you can remigrate the database without droping it simply by the below command .
+
+```
+- python manage.py migrate --fake finflo 0001
+- python manage.py migrate finflo 0002
+```
+
+## Usage
+
+1. Once your setup is completed , whenever the objects in **WORK_MODEL** is created , the finflo automatically creates :
+    
+    - Transition manager
+    - workflowitems 
+    - workevents
+
+2. The transition for each model can be carried out with 2 methods:
+    
+    1. Navigate to the url : *localhost/transition/*
+        - in the content section use the format as below and POST 
+        - {"type" : "MyApp.Model" , "action" : "MyAction" , "t_id" : "1"}
+    
+    2. In Postman , pass the following key in body as follows 
+
+        - t_id (transition_id)
+        - type (model_type)
+        - action 
+        - Example <br /> ![Screenshot](base_pack/finflo_postman.PNG)
 
 
-1. import your transition function from venzoscf.views 
-
-2. The transition function requires 4 positional arguments :
-
-3.
+3.  Some important information for transition are as follows :
+    
     |  Arguments   | Data_Type  |
     | ------------- | ------------- |
     | type   | str  |
     | action  | str  |
-    | stage  | int  |
-    | id (optional) | int  | 
+    | t_id | int  | 
+    | source  | str  | 
+    | interim  | str  | 
+    | target  | str  | 
+    | from_party  | str  | 
+    | to_party  | str  | 
 
 
-```python
-from venzoscf.views import Venzoscf
-
-myhandler = Venzoscf()
-
-# example function
-
-def index():
-    myhandler.transition(type = "PROGRAM",action = "submit" ,stage = 0)
-    return HttpResponse({"data"})
-
-```
 
 
-## Tech Stack
+## API URLS
 
-    1. Python
-    2. Django==3.2.5
-    3. Django-rest-framework
+1. List of all Url's
+
+| Api URL's  | METHOD | FORM DATA | QUERY_PARAMS |
+| ------------- | ------------- | ------------- | ------------- |
+| *localhost/model/* | GET  | NONE | *?type=Model&t_id=1* ***or*** <br/> ***or*** *t_id=1* |
+| *localhost/*transition*/* | POST | action , type , t_id , <br /> ***optional :*** from_party , to_party , <br /> source , interim , target| NONE |
+| *localhost/*transition*/reset/* | POST | type , t_id | NONE |
+| *localhost/*action*/* | GET , POST | description , model , <br/> from_state ,to_state ,<br /> from_party , to_party , stage_required | *?action=MYACTION* ***or*** <br/> *?action=MYACTION&?model=Model*| 
+| *localhost/*signatures*/* | GET , POST | name , sub_action_name | NONE |
+| *localhost/*party-type*/* | GET , POST | description | NONE |
+| *localhost/*states*/* | GET , POST | description | NONE |
+| *localhost/*workflowitems*/* | GET | NONE | NONE |
+| *localhost/workevents/* | GET | NONE | NONE |
 
 
-## API 
 
-#### Api urls 
+## MANUAL TRANSITION 
 
 
-| Api URL's  | METHOD | QUERY_PARAMS |
-| ------------- | ------------- | ------------- |
-| *localhost/model/* | GET  | ?type=PROGRAM |
-| *localhost/*action*/* | GET | NONE |
-| *localhost/*action*/* | POST | NONE |
-| *localhost/*workflowitems*/* | GET | NONE |
-| *localhost/workevents/* | GET | NONE |
+1. example 
 
+    ```
+        from finflo.transition import FinFlotransition
+
+        # create a manual transition 
+
+        FinFlotransition(t_id = "some id",type = "example_model",source = "your own state" ,
+        interim = "your own state" , target = "your own state" ,
+        from_party = "int or str" , to_party =  "int or str" , record_datas = "model_json_data")
+        
+    ```
 
 
 
 ## Support
 
-For support, email support@venzo.com .
+For support, contact
 
-
-## Future
-    
-1. postgres support
-2. next_Avail_transitions
-
+1. support@venzo.com 
+2. anandrajb@venzotechnologies.com

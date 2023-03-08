@@ -1,0 +1,19 @@
+from setuptools import setup, find_packages
+
+
+# read from README.RST
+from pathlib import Path
+this_directory = Path(__file__).parent
+long_description = (this_directory / "DOCS.md").read_text()
+
+
+setup(
+    name='finflo',
+    long_description=long_description,
+    long_description_content_type='text/markdown'
+)
+
+
+# initial release pip
+
+# version base - new version -35

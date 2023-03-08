@@ -1,17 +1,23 @@
-from venzoscf.models import TransitionManager
-from venzoscf.views import scftransition
+# from venzoscf.models import TransitionManager
+# from venzoscf.views import scftransition
 
 
 
-TransitionManager.objects.create(type = "PROGRAM")
+# TransitionManager.objects.create(type = "PROGRAM")
 
 
-# initiating a transition
+# # initiating a transition
 
 
-@scftransition(type = "PROGRAM")
-def myfunc():
-    return "data"
+# @scftransition(type = "PROGRAM")
+# def myfunc():
+#     return "data"
 
 
-### sample  functions   ###
+# ### sample  functions   ###
+
+# data
+
+a = 'transaction.programs'
+
+print(a.replace('.','_'))
